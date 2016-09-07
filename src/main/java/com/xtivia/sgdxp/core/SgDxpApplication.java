@@ -42,6 +42,9 @@ public class SgDxpApplication extends Application {
 
 	    // set up the service trackers for the DXP services
         BundleContext bc = FrameworkUtil.getBundle(SgDxpApplication.class).getBundleContext();
+		if (bc == null) {
+			throw new IllegalArgumentException("SGDXP Initialization could not obtain bundle context");
+		}
         _userLocalServiceTracker = new ServiceTracker(bc, UserLocalService.class.getName(), null);
         _organizationLocalServiceTracker = new ServiceTracker(bc, OrganizationLocalService.class.getName(), null);
         _roleLocalServiceTracker = new ServiceTracker(bc, RoleLocalService.class.getName(), null);

@@ -20,27 +20,39 @@ repositories {
 	}
 }
 
+group = 'com.xtivia.tools'
+version = sgdxp_version
+
 apply plugin: 'java'
 apply plugin: 'maven'
 apply plugin: 'maven-publish'
 apply plugin: 'org.dm.bundle'
 apply plugin: 'com.jfrog.bintray'
 
+task sourcesJar(type: Jar, dependsOn: classes) {
+    classifier = 'sources'
+    from sourceSets.main.allSource
+}
+
+artifacts {
+    archives sourcesJar
+}
+
 publishing {
     publications {
-        sgdxpPublication(MavenPublication) {
+        mavenJava(MavenPublication) {
             from components.java
-            groupId 'com.xtivia.tools'
-            artifactId 'sgdxp'
-            version sgdxp_version
+            artifact sourcesJar
+
         }
     }
 }
 
 bintray {
+
     user = externalProperty('bintray.properties','bintrayUser')
     key = externalProperty('bintray.properties','bintrayApikey')
-    publications = ['sgdxpPublication']
+    publications = ['mavenJava']
     pkg {
 
         repo = 'sgdxp'
