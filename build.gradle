@@ -9,7 +9,7 @@ buildscript {
 
 repositories {
 	mavenLocal()
-    jcenter()
+  jcenter()
 	maven {
 		url "http://cdn.repository.liferay.com/nexus/content/groups/public"
 	}
@@ -19,8 +19,6 @@ group = 'com.xtivia.tools'
 version = sgdxp_version
 
 apply plugin: 'java'
-apply plugin: 'maven'
-apply plugin: 'maven-publish'
 apply plugin: 'org.dm.bundle'
 
 dependencies {
