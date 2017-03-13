@@ -18,3 +18,4 @@ target/
 .gradle
 build
 bintray.properties
+jcenter.build.gradle

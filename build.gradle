@@ -4,12 +4,7 @@ buildscript {
     }
     dependencies {
         classpath 'org.dm.gradle:gradle-bundle-plugin:0.8.5'
-        classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.7'
     }
-}
-
-plugins {
-    id "com.jfrog.bintray" version "1.7"
 }
 
 repositories {
@@ -27,58 +22,17 @@ apply plugin: 'java'
 apply plugin: 'maven'
 apply plugin: 'maven-publish'
 apply plugin: 'org.dm.bundle'
-apply plugin: 'com.jfrog.bintray'
-
-task sourcesJar(type: Jar, dependsOn: classes) {
-    classifier = 'sources'
-    from sourceSets.main.allSource
-}
-
-artifacts {
-    archives sourcesJar
-}
-
-publishing {
-    publications {
-        mavenJava(MavenPublication) {
-            from components.java
-            artifact sourcesJar
-
-        }
-    }
-}
-
-bintray {
-
-    user = externalProperty('bintray.properties','bintrayUser')
-    key = externalProperty('bintray.properties','bintrayApikey')
-    publications = ['mavenJava']
-    pkg {
-
-        repo = 'sgdxp'
-        name = 'sgdxp'
-        userOrg = 'xtivia'
-        licenses = ['LGPL-2.1']
-        vcsUrl = 'https://github.com/xtivia/sgdxp.git'
-
-        version {
-            name = sgdxp_version
-            desc = 'Service Guard for DXP Module'
-            released  = new Date()
-        }
-    }
-}
 
 dependencies {
 	compile group: "com.liferay.portal",  name: "com.liferay.portal.kernel",                 version: "2.0.0"
-    compile group: 'com.liferay',         name: 'com.liferay.portal.configuration.metatype', version: '2.0.0'
+  compile group: 'com.liferay',         name: 'com.liferay.portal.configuration.metatype', version: '2.0.0'
 	compile group: 'javax.ws.rs',         name: 'javax.ws.rs-api',                           version: '2.0.1'
 	compile group: "javax.portlet",       name: "portlet-api",                               version: "2.0"
 	compile group: "javax.servlet",       name: "servlet-api",                               version: "2.5"
 	compile group: "biz.aQute.bnd",       name: "biz.aQute.bndlib",                          version: "3.1.0"
 	compile group: "org.osgi",            name: "org.osgi.compendium",                       version: "5.0.0"
-    compile group: 'org.osgi',            name: 'org.osgi.core',                             version: '5.0.0' 
-    compile group: 'org.slf4j',           name: 'slf4j-api',                                 version: '1.7.21'
+  compile group: 'org.osgi',            name: 'org.osgi.core',                             version: '5.0.0' 
+  compile group: 'org.slf4j',           name: 'slf4j-api',                                 version: '1.7.21'
 }
 
 bundle {
@@ -89,10 +43,4 @@ bundle {
     'Export-Package'   : 'com.xtivia.sgdxp.*',
     'Import-Package'   : 'javax.servlet.http,javax.servlet,*'
   ]
-}
-
-def String externalProperty (String fileName, String propertyName) {
-    Properties properties = new Properties ()
-    properties.load (project.rootProject.file (fileName).newDataInputStream ())
-    return properties.getProperty (propertyName)
 }
