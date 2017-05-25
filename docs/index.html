@@ -1,0 +1,43 @@
+---
+title: Service Guard
+---
+
+{% include header.html %}
+
+<!-- Landing Area -->
+<div class="banner banner-full-height overlay-black">
+  <div class="container text-center">
+    <h1>
+       <img src="img/locked.png" width="40" height="40" opacity="0.0">
+       &nbsp;Service Guard for DXP&nbsp;
+       <img src="img/liferay_logo.png" width="40" height="40" opacity="0.0"></img>
+       </h1>
+    <h5>Secure your JAX-RS REST services in DXP using Liferay Roles and Permissions</h5>
+    <br><br><br><br>
+    <p><a class="btn btn-white btn-xl btn-outline" href="#overview" role="button"> Read More </a></p>
+  </div>
+
+  <ul class="social-icons">
+    <li><a target="_blank" href="https://twitter.com/xtivia"><i class="fa fa-twitter"></i></a></li>
+    <li><a target="_blank" href="https://www.facebook.com/Xtivia/"><i class="fa fa-facebook"></i></a></li>
+    <li><a target="_blank" href="https://www.linkedin.com/company/xtivia"><i class="fa fa-linkedin"></i></a></li>
+    <li><a target="_blank" href="https://www.youtube.com/user/XTIVIA"><i class="fa fa-youtube"></i></a></li>
+  </ul>
+</div>
+<!-- END Landing Area -->
+
+<main class="container">
+  <div class="row">
+    {% include _landing/sidebar.html %}
+    <!-- Main content -->
+    <article class="col-md-9 col-sm-9 main-content" role="main">
+      <header id="overview">
+      {% capture overview %}{% include _landing/overview.md %}{% endcapture %}
+      {{ overview | markdownify }}
+      </header>
+    </article>
+    <!-- END Main content -->
+  </div>
+</main>
+
+{% include footer.html %}
