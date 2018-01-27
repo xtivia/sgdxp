@@ -33,6 +33,7 @@ import com.xtivia.sgdxp.filter.OmniadminFilter;
 import com.xtivia.sgdxp.filter.OrgMemberFilter;
 import com.xtivia.sgdxp.filter.OrgRoleFilter;
 import com.xtivia.sgdxp.filter.RegularRoleFilter;
+import com.xtivia.sgdxp.filter.ResourceAuthorizedFilter;
 
 public class SgDxpApplication extends Application {
 
@@ -62,6 +63,7 @@ public class SgDxpApplication extends Application {
         singletons.add(new OrgMemberFilter(this));
         singletons.add(new OrgRoleFilter(this));
         singletons.add(new RegularRoleFilter(this));
+        singletons.add(new ResourceAuthorizedFilter(this));
 
 		return singletons;
 	}	
