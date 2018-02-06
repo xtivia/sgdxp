@@ -1,18 +1,15 @@
 package com.xtivia.sgdxp.filter;
 
-import java.lang.annotation.Annotation;
-import java.lang.reflect.Method;
+import java.lang.invoke.MethodHandles;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.container.ContainerRequestContext;
-import javax.ws.rs.container.ContainerRequestFilter;
 import javax.ws.rs.container.ResourceInfo;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.UriInfo;
 
-import org.osgi.service.component.annotations.Component;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -22,9 +19,8 @@ import com.liferay.portal.kernel.util.Validator;
 import com.xtivia.sgdxp.annotation.ResourceAuthorized;
 import com.xtivia.sgdxp.core.SgDxpApplication;
 
-@Component(immediate = true, service = ResourceAuthorizedFilter.class)
 public class ResourceAuthorizedFilter extends AbstractSecurityFilter {
-	private static final Logger LOG = LoggerFactory.getLogger(ResourceAuthorizedFilter.class);
+	private static final Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
 	@Context
 	private HttpServletRequest httpRequest;
