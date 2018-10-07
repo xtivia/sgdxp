@@ -15,16 +15,25 @@
  */
 package com.xtivia.sgdxp.core;
 
-import com.liferay.portal.kernel.service.OrganizationLocalService;
-import com.liferay.portal.kernel.service.RoleLocalService;
-import com.liferay.portal.kernel.service.UserLocalService;
-import com.xtivia.sgdxp.filter.*;
+import java.util.HashSet;
+import java.util.Set;
+
+import javax.ws.rs.core.Application;
+
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.FrameworkUtil;
 import org.osgi.util.tracker.ServiceTracker;
 
-import java.util.HashSet;
-import java.util.Set;
+import com.liferay.portal.kernel.service.OrganizationLocalService;
+import com.liferay.portal.kernel.service.RoleLocalService;
+import com.liferay.portal.kernel.service.UserLocalService;
+import com.xtivia.sgdxp.filter.AuthenticatedFilter;
+import com.xtivia.sgdxp.filter.AuthorizedFilter;
+import com.xtivia.sgdxp.filter.OmniadminFilter;
+import com.xtivia.sgdxp.filter.OrgMemberFilter;
+import com.xtivia.sgdxp.filter.OrgRoleFilter;
+import com.xtivia.sgdxp.filter.RegularRoleFilter;
+import com.xtivia.sgdxp.filter.ResourceAuthorizedFilter;
 
 public class SgDxpApplication extends BaseSgDxpApplication implements ISgDxpApplication {
 
@@ -46,16 +55,7 @@ public class SgDxpApplication extends BaseSgDxpApplication implements ISgDxpAppl
         _roleLocalServiceTracker.open();
         
 	    Set<Object> singletons = new HashSet<Object>();
-
-        //add the XSF security filters
-		singletons.add(new AuthenticatedFilter(this));
-        singletons.add(new AuthorizedFilter(this));
-        singletons.add(new OmniadminFilter(this));
-        singletons.add(new OrgMemberFilter(this));
-        singletons.add(new OrgRoleFilter(this));
-        singletons.add(new RegularRoleFilter(this));
-        singletons.add(new ResourceAuthorizedFilter(this));
-
+		singletons.addAll(super.getSingletons());
 		return singletons;
 	}	
 	
