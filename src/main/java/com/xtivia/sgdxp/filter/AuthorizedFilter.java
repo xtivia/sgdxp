@@ -15,25 +15,24 @@
  */
 package com.xtivia.sgdxp.filter;
 
+import com.liferay.portal.kernel.model.User;
+import com.xtivia.sgdxp.annotation.Authorized;
+import com.xtivia.sgdxp.core.IAuthorizer;
+import com.xtivia.sgdxp.core.IContext;
+import com.xtivia.sgdxp.core.ISgDxpApplication;
+import com.xtivia.sgdxp.liferay.DxpResourceContext;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.container.ContainerRequestContext;
 import javax.ws.rs.container.ResourceInfo;
 import javax.ws.rs.core.Response.Status;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.liferay.portal.kernel.model.User;
-import com.xtivia.sgdxp.annotation.Authorized;
-import com.xtivia.sgdxp.core.IAuthorizer;
-import com.xtivia.sgdxp.core.IContext;
-import com.xtivia.sgdxp.core.SgDxpApplication;
-import com.xtivia.sgdxp.liferay.DxpResourceContext;
-
 @Authorized
 public class AuthorizedFilter extends AbstractSecurityFilter {
 
-	public AuthorizedFilter(SgDxpApplication xsfApplication) {
+	public AuthorizedFilter(ISgDxpApplication xsfApplication) {
 		super(xsfApplication);
 	}
 		

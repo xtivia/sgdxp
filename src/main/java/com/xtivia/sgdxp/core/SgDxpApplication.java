@@ -35,7 +35,7 @@ import com.xtivia.sgdxp.filter.OrgRoleFilter;
 import com.xtivia.sgdxp.filter.RegularRoleFilter;
 import com.xtivia.sgdxp.filter.ResourceAuthorizedFilter;
 
-public class SgDxpApplication extends Application {
+public class SgDxpApplication extends Application implements ISgDxpApplication {
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override

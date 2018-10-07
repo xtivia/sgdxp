@@ -24,6 +24,7 @@ import javax.ws.rs.container.ResourceInfo;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.UriInfo;
 
+import com.xtivia.sgdxp.core.ISgDxpApplication;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -51,9 +52,9 @@ abstract class AbstractSecurityFilter implements ContainerRequestFilter {
     @Context private ResourceInfo       resourceInfo;
     @Context private UriInfo            uriInfo;
     
-	private SgDxpApplication sgDxpApplication;
+	private ISgDxpApplication sgDxpApplication;
 
-    AbstractSecurityFilter(SgDxpApplication sgDxpApplication) {
+    AbstractSecurityFilter(ISgDxpApplication sgDxpApplication) {
     	this.sgDxpApplication = sgDxpApplication;
     }
 
@@ -98,7 +99,7 @@ abstract class AbstractSecurityFilter implements ContainerRequestFilter {
     	return this.uriInfo;
     }
     
-    SgDxpApplication getSgDxpApplication() {
+    ISgDxpApplication getSgDxpApplication() {
     	return this.sgDxpApplication;
     }
 
