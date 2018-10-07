@@ -39,7 +39,7 @@ bundle {
     'Bundle-Version'   : sgdxp_version,
     '-metatype'        : '*',
     '-buildpath'       : 'osgi.annotation; version=6.0.1,osgi.core; version=6.0,osgi.cmpn; version=6.0',
-    'Export-Package'   : 'com.xtivia.sgdxp.*',
+    'Export-Package'   : 'com.xtivia.sgdxp.*, com.xtivia.sgdxp.core',
     'Import-Package'   : 'javax.servlet.http,javax.servlet,*'
   ]
 }
