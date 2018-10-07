@@ -15,27 +15,18 @@
  */
 package com.xtivia.sgdxp.core;
 
-import java.util.HashSet;
-import java.util.Set;
-
-import javax.ws.rs.core.Application;
-
+import com.liferay.portal.kernel.service.OrganizationLocalService;
+import com.liferay.portal.kernel.service.RoleLocalService;
+import com.liferay.portal.kernel.service.UserLocalService;
+import com.xtivia.sgdxp.filter.*;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.FrameworkUtil;
 import org.osgi.util.tracker.ServiceTracker;
 
-import com.liferay.portal.kernel.service.OrganizationLocalService;
-import com.liferay.portal.kernel.service.RoleLocalService;
-import com.liferay.portal.kernel.service.UserLocalService;
-import com.xtivia.sgdxp.filter.AuthenticatedFilter;
-import com.xtivia.sgdxp.filter.AuthorizedFilter;
-import com.xtivia.sgdxp.filter.OmniadminFilter;
-import com.xtivia.sgdxp.filter.OrgMemberFilter;
-import com.xtivia.sgdxp.filter.OrgRoleFilter;
-import com.xtivia.sgdxp.filter.RegularRoleFilter;
-import com.xtivia.sgdxp.filter.ResourceAuthorizedFilter;
+import java.util.HashSet;
+import java.util.Set;
 
-public class SgDxpApplication extends Application implements ISgDxpApplication {
+public class SgDxpApplication extends BaseSgDxpApplication implements ISgDxpApplication {
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override
