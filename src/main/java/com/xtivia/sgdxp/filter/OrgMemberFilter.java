@@ -15,27 +15,25 @@
  */
 package com.xtivia.sgdxp.filter;
 
-import java.util.List;
-
-import javax.ws.rs.WebApplicationException;
-import javax.ws.rs.container.ContainerRequestContext;
-import javax.ws.rs.container.ResourceInfo;
-import javax.ws.rs.core.Response.Status;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.model.Organization;
 import com.liferay.portal.kernel.model.User;
 import com.xtivia.sgdxp.annotation.OrgMember;
-import com.xtivia.sgdxp.core.SgDxpApplication;
+import com.xtivia.sgdxp.core.ISgDxpApplication;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.container.ContainerRequestContext;
+import javax.ws.rs.container.ResourceInfo;
+import javax.ws.rs.core.Response.Status;
+import java.util.List;
 
 @OrgMember
 public class OrgMemberFilter extends AbstractSecurityFilter {
 
-	public OrgMemberFilter(SgDxpApplication xsfApplication) {
+	public OrgMemberFilter(ISgDxpApplication xsfApplication) {
 		super(xsfApplication);
 	}
 		

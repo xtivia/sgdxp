@@ -1,6 +1,12 @@
 package com.xtivia.sgdxp.filter;
 
-import java.lang.invoke.MethodHandles;
+import com.liferay.portal.kernel.security.permission.PermissionChecker;
+import com.liferay.portal.kernel.security.permission.PermissionThreadLocal;
+import com.liferay.portal.kernel.util.Validator;
+import com.xtivia.sgdxp.annotation.ResourceAuthorized;
+import com.xtivia.sgdxp.core.ISgDxpApplication;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.WebApplicationException;
@@ -9,15 +15,7 @@ import javax.ws.rs.container.ResourceInfo;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.UriInfo;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.liferay.portal.kernel.security.permission.PermissionChecker;
-import com.liferay.portal.kernel.security.permission.PermissionThreadLocal;
-import com.liferay.portal.kernel.util.Validator;
-import com.xtivia.sgdxp.annotation.ResourceAuthorized;
-import com.xtivia.sgdxp.core.SgDxpApplication;
+import java.lang.invoke.MethodHandles;
 
 public class ResourceAuthorizedFilter extends AbstractSecurityFilter {
 	private static final Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
@@ -29,7 +27,7 @@ public class ResourceAuthorizedFilter extends AbstractSecurityFilter {
 	@Context
 	private UriInfo uriInfo;
 
-	public ResourceAuthorizedFilter(SgDxpApplication sgDxpApplication) {
+	public ResourceAuthorizedFilter(ISgDxpApplication sgDxpApplication) {
 		super(sgDxpApplication);
 	}
 

@@ -15,22 +15,21 @@
  */
 package com.xtivia.sgdxp.filter;
 
+import com.liferay.portal.kernel.model.User;
+import com.xtivia.sgdxp.annotation.Authenticated;
+import com.xtivia.sgdxp.core.ISgDxpApplication;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.container.ContainerRequestContext;
 import javax.ws.rs.container.ResourceInfo;
 import javax.ws.rs.core.Response.Status;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.liferay.portal.kernel.model.User;
-import com.xtivia.sgdxp.annotation.Authenticated;
-import com.xtivia.sgdxp.core.SgDxpApplication;
-
 @Authenticated
 public class AuthenticatedFilter extends AbstractSecurityFilter {
 		
-	public AuthenticatedFilter(SgDxpApplication xsfApplication) {
+	public AuthenticatedFilter(ISgDxpApplication xsfApplication) {
 		super(xsfApplication);
 	}
 		

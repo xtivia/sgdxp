@@ -35,7 +35,7 @@ import com.xtivia.sgdxp.filter.OrgRoleFilter;
 import com.xtivia.sgdxp.filter.RegularRoleFilter;
 import com.xtivia.sgdxp.filter.ResourceAuthorizedFilter;
 
-public class SgDxpApplication extends Application {
+public class SgDxpApplication extends BaseSgDxpApplication implements ISgDxpApplication {
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override
@@ -55,16 +55,7 @@ public class SgDxpApplication extends Application {
         _roleLocalServiceTracker.open();
         
 	    Set<Object> singletons = new HashSet<Object>();
-
-        //add the XSF security filters
-		singletons.add(new AuthenticatedFilter(this));
-        singletons.add(new AuthorizedFilter(this));
-        singletons.add(new OmniadminFilter(this));
-        singletons.add(new OrgMemberFilter(this));
-        singletons.add(new OrgRoleFilter(this));
-        singletons.add(new RegularRoleFilter(this));
-        singletons.add(new ResourceAuthorizedFilter(this));
-
+		singletons.addAll(super.getSingletons());
 		return singletons;
 	}	
 	
