@@ -1,0 +1,11 @@
+Bundle-Name: Xtivia Service Guard DXP
+Bundle-SymbolicName: com.xtivia.tools.sgdxp
+Bundle-Version: 1.9.0
+Require-Capability:\
+	osgi.contract;\
+		filter:="(&(osgi.contract=JavaJAXRS)(version=2))"
+Export-Package: \
+	com.xtivia.sgdxp.annotation,\
+	com.xtivia.sgdxp.core,\
+	com.xtivia.sgdxp.exception
+-sources: true

@@ -15,31 +15,33 @@
  */
 package com.xtivia.sgdxp.core;
 
+import java.util.HashMap;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.HashMap;
-
-@SuppressWarnings({"serial", "rawtypes"})
+@SuppressWarnings({ "rawtypes" })
 public class BaseContext extends HashMap implements IContext {
+
+	private static Logger _logger = LoggerFactory.getLogger(BaseContext.class);
+
+	private static final long serialVersionUID = 1L;
 
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T> T find(String key) {
 		// pull the object out of the map.
-		Object entity = get(key);
+		final Object entity = get(key);
 
 		if (entity != null) {
 			// try to cast and return as desired type.
 			try {
 				return (T) entity;
-			} catch (ClassCastException e) {
-				_logger.error("Class cast exception when accessing key="+key,e);
+			} catch (final ClassCastException e) {
+				_logger.error("Class cast exception when accessing key=" + key, e);
 			}
 		}
 
 		return null;
 	}
-
-    private static Logger _logger = LoggerFactory.getLogger(BaseContext.class);
 }

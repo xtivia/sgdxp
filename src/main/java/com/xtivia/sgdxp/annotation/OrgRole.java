@@ -23,9 +23,10 @@ import java.lang.annotation.Target;
 import javax.ws.rs.NameBinding;
 
 @NameBinding
-@Target({ElementType.METHOD,ElementType.TYPE})
+@Target({ ElementType.METHOD, ElementType.TYPE })
 @Retention(RetentionPolicy.RUNTIME)
 public @interface OrgRole {
-   String org() default "";
-   String role() default "";
+	String org() default "";
+
+	String[] role() default "";
 }

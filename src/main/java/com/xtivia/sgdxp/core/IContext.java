@@ -22,4 +22,3 @@ public interface IContext extends Map {
 
 	<T> T find(String key);
 }
-

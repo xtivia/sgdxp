@@ -15,76 +15,79 @@
  */
 package com.xtivia.sgdxp.filter;
 
+import java.util.List;
+
+import javax.ws.rs.container.ContainerRequestContext;
+import javax.ws.rs.container.ResourceInfo;
+import javax.ws.rs.core.Response.Status;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.model.Organization;
 import com.liferay.portal.kernel.model.User;
 import com.xtivia.sgdxp.annotation.OrgMember;
 import com.xtivia.sgdxp.core.ISgDxpApplication;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.xtivia.sgdxp.exception.SgDxpRestException;
 
-import javax.ws.rs.WebApplicationException;
-import javax.ws.rs.container.ContainerRequestContext;
-import javax.ws.rs.container.ResourceInfo;
-import javax.ws.rs.core.Response.Status;
-import java.util.List;
-
-@OrgMember
 public class OrgMemberFilter extends AbstractSecurityFilter {
+
+	private static Logger _logger = LoggerFactory.getLogger(OrgMemberFilter.class);
 
 	public OrgMemberFilter(ISgDxpApplication xsfApplication) {
 		super(xsfApplication);
 	}
-		
-    @Override
-    public void filter(ContainerRequestContext requestContext) {
 
-        if (_logger.isDebugEnabled()) {
-            ResourceInfo resourceInfo = super.getResourceInfo();
-        	_logger.debug(String.format("Org member filter executes for class=%s, method=%s",
-                                        resourceInfo.getResourceClass().getName(),
-                                        resourceInfo.getResourceMethod().getName()));
+	@Override
+	public void filter(ContainerRequestContext requestContext) {
+
+		if (_logger.isDebugEnabled()) {
+			final ResourceInfo resourceInfo = super.getResourceInfo();
+			_logger.debug(String.format("Org member filter executes for class=%s, method=%s",
+					resourceInfo.getResourceClass().getName(), resourceInfo.getResourceMethod().getName()));
 		}
 
 		if (!checkUserInOrg()) {
-		    throw new WebApplicationException(Status.UNAUTHORIZED);
+			throw new SgDxpRestException("User not a organization member", Status.BAD_REQUEST);
 		}
 
-        if (_logger.isDebugEnabled()) {
-            ResourceInfo resourceInfo = super.getResourceInfo();
-            _logger.debug(String.format("Org member filter succeeds for class=%s, method=%s",
-                    resourceInfo.getResourceClass().getName(),
-                    resourceInfo.getResourceMethod().getName()));
-        }
-    }
-    
+		if (_logger.isDebugEnabled()) {
+			final ResourceInfo resourceInfo = super.getResourceInfo();
+			_logger.debug(String.format("Org member filter succeeds for class=%s, method=%s",
+					resourceInfo.getResourceClass().getName(), resourceInfo.getResourceMethod().getName()));
+		}
+	}
+
 	private boolean checkUserInOrg() {
 		boolean result = true;
-		OrgMember annotation = getAnnotation(OrgMember.class);
+		final OrgMember annotation = getAnnotation(OrgMember.class);
+
 		if (annotation != null) {
-			User user = getUser();
+			final User user = getUser();
+
 			if (user != null && !user.isDefaultUser()) {
 				try {
-					String orgname = annotation.value();
-					List<Organization> organizations = user.getOrganizations();
+					final String orgname = annotation.value();
+					final List<Organization> organizations = user.getOrganizations();
 					result = false;
-					for (Organization organization : organizations){
-						if (organization.getName().equals(orgname)){
+
+					for (final Organization organization : organizations) {
+						if (organization.getName().equals(orgname)) {
 							result = true;
 							break;
 						}
 					}
 				} catch (PortalException | SystemException e) {
-					_logger.error("Error accessing user organizations",e);
+					_logger.error("Error accessing user organizations", e);
 					result = false;
 				}
 			} else {
 				result = false; // if not logged in fails too
 			}
 		}
+
 		return result;
 	}
-
-    private static Logger _logger = LoggerFactory.getLogger(OrgMemberFilter.class);
 }

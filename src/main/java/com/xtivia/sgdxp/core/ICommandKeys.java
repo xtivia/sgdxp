@@ -17,15 +17,15 @@ package com.xtivia.sgdxp.core;
 
 public interface ICommandKeys {
 
-	String HTTP_SESSION     = "_session_";
-	
-	String HTTP_REQUEST     = "_request_";
+	String HTTP_REQUEST = "_request_";
 
-	String SERVLET_CONTEXT  = "_servlet_context_";
-	
-	String PATH_PARAMETERS  = "_pathparams_";
+	String HTTP_SESSION = "_session_";
 
-	String RESOURCE_CLASS   = "_resourceclass_";
+	String PATH_PARAMETERS = "_pathparams_";
 
-	String RESOURCE_METHOD  = "_resourcemethod_";
+	String RESOURCE_CLASS = "_resourceclass_";
+
+	String RESOURCE_METHOD = "_resourcemethod_";
+
+	String SERVLET_CONTEXT = "_servlet_context_";
 }

@@ -22,9 +22,11 @@ public interface IAuthorizer {
 
 	/**
 	 * authorize: Checks whether the current request is authorized or not.
-	 * @param context Context for the authorization.
+	 *
+	 * @param context
+	 *            Context for the authorization.
 	 * @return boolean <code>true</code> if the user can access the resource method, otherwise they cannot.
 	 */
-    boolean authorize(IContext context);
-  
+	boolean authorize(IContext context);
+
 }

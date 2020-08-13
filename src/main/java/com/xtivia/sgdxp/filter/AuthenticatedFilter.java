@@ -15,59 +15,59 @@
  */
 package com.xtivia.sgdxp.filter;
 
-import com.liferay.portal.kernel.model.User;
-import com.xtivia.sgdxp.annotation.Authenticated;
-import com.xtivia.sgdxp.core.ISgDxpApplication;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.container.ContainerRequestContext;
 import javax.ws.rs.container.ResourceInfo;
 import javax.ws.rs.core.Response.Status;
 
-@Authenticated
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.liferay.portal.kernel.model.User;
+import com.xtivia.sgdxp.annotation.Authenticated;
+import com.xtivia.sgdxp.core.ISgDxpApplication;
+import com.xtivia.sgdxp.exception.SgDxpRestException;
+
 public class AuthenticatedFilter extends AbstractSecurityFilter {
-		
+
+	private static Logger _logger = LoggerFactory.getLogger(AuthenticatedFilter.class);
+
 	public AuthenticatedFilter(ISgDxpApplication xsfApplication) {
 		super(xsfApplication);
 	}
-		
-    @Override
-    public void filter(ContainerRequestContext requestContext) {
 
-        if (_logger.isDebugEnabled()) {
-            ResourceInfo resourceInfo = super.getResourceInfo();
-            _logger.debug(String.format("Auhenticated filter executes for class=%s, method=%s",
-                    resourceInfo.getResourceClass().getName(),
-                    resourceInfo.getResourceMethod().getName()));
-        }
-
-		if (!checkIsAuthenticated()) {
-		    throw new WebApplicationException(Status.UNAUTHORIZED);
+	@Override
+	public void filter(ContainerRequestContext requestContext) {
+		if (_logger.isDebugEnabled()) {
+			final ResourceInfo resourceInfo = super.getResourceInfo();
+			_logger.debug(String.format("Auhenticated filter executes for class=%s, method=%s",
+					resourceInfo.getResourceClass().getName(), resourceInfo.getResourceMethod().getName()));
 		}
 
-        if (_logger.isDebugEnabled()) {
-            ResourceInfo resourceInfo = super.getResourceInfo();
-            _logger.debug(String.format("Auhenticated filter succeeds for class=%s, method=%s",
-                    resourceInfo.getResourceClass().getName(),
-                    resourceInfo.getResourceMethod().getName()));
-        }
-    }
-    
-    private boolean checkIsAuthenticated() {
-    	boolean result = true;
-    	Authenticated annotation = getAnnotation(Authenticated.class);
-    	if (annotation != null) {
-			User user = getUser();
-			if (user != null && !user.isDefaultUser()) {
-		        result = true;
-			} else {
-				result = false;  
-			}
-    	}
-    	return result;
-    }
+		if (!checkIsAuthenticated()) {
+			throw new SgDxpRestException("User not authenticated", Status.UNAUTHORIZED);
+		}
 
-    private static Logger _logger = LoggerFactory.getLogger(AuthenticatedFilter.class);
+		if (_logger.isDebugEnabled()) {
+			final ResourceInfo resourceInfo = super.getResourceInfo();
+			_logger.debug(String.format("Auhenticated filter succeeds for class=%s, method=%s",
+					resourceInfo.getResourceClass().getName(), resourceInfo.getResourceMethod().getName()));
+		}
+	}
+
+	private boolean checkIsAuthenticated() {
+		boolean result = true;
+		final Authenticated annotation = getAnnotation(Authenticated.class);
+
+		if (annotation != null) {
+			final User user = getUser();
+
+			if (user != null && !user.isDefaultUser()) {
+				result = true;
+			} else {
+				result = false;
+			}
+		}
+
+		return result;
+	}
 }

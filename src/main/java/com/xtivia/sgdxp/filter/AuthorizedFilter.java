@@ -15,59 +15,59 @@
  */
 package com.xtivia.sgdxp.filter;
 
+import javax.ws.rs.container.ContainerRequestContext;
+import javax.ws.rs.container.ResourceInfo;
+import javax.ws.rs.core.Response.Status;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.liferay.portal.kernel.model.User;
 import com.xtivia.sgdxp.annotation.Authorized;
 import com.xtivia.sgdxp.core.IAuthorizer;
 import com.xtivia.sgdxp.core.IContext;
 import com.xtivia.sgdxp.core.ISgDxpApplication;
+import com.xtivia.sgdxp.exception.SgDxpRestException;
 import com.xtivia.sgdxp.liferay.DxpResourceContext;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-import javax.ws.rs.WebApplicationException;
-import javax.ws.rs.container.ContainerRequestContext;
-import javax.ws.rs.container.ResourceInfo;
-import javax.ws.rs.core.Response.Status;
-
-@Authorized
 public class AuthorizedFilter extends AbstractSecurityFilter {
+
+	private static Logger _logger = LoggerFactory.getLogger(AuthorizedFilter.class);
 
 	public AuthorizedFilter(ISgDxpApplication xsfApplication) {
 		super(xsfApplication);
 	}
-		
-    @Override
-    public void filter(ContainerRequestContext requestContext) {
 
-        if (_logger.isDebugEnabled()) {
-            ResourceInfo resourceInfo = super.getResourceInfo();
-        	_logger.debug(String.format("Authorized filter executes for class=%s, method=%s",
-                                        resourceInfo.getResourceClass().getName(),
-                                        resourceInfo.getResourceMethod().getName()));
+	@Override
+	public void filter(ContainerRequestContext requestContext) {
+		if (_logger.isDebugEnabled()) {
+			final ResourceInfo resourceInfo = super.getResourceInfo();
+			_logger.debug(String.format("Authorized filter executes for class=%s, method=%s",
+					resourceInfo.getResourceClass().getName(), resourceInfo.getResourceMethod().getName()));
 		}
 
 		if (!checkIsAuthorized()) {
-		    throw new WebApplicationException(Status.UNAUTHORIZED);
+			throw new SgDxpRestException("User not authorized", Status.UNAUTHORIZED);
 		}
 
-        if (_logger.isDebugEnabled()) {
-            ResourceInfo resourceInfo = super.getResourceInfo();
-            _logger.debug(String.format("Authorized filter succeeds for class=%s, method=%s",
-                    resourceInfo.getResourceClass().getName(),
-                    resourceInfo.getResourceMethod().getName()));
-        }
-    }
-    
+		if (_logger.isDebugEnabled()) {
+			final ResourceInfo resourceInfo = super.getResourceInfo();
+			_logger.debug(String.format("Authorized filter succeeds for class=%s, method=%s",
+					resourceInfo.getResourceClass().getName(), resourceInfo.getResourceMethod().getName()));
+		}
+	}
+
 	private boolean checkIsAuthorized() {
 		boolean result = true;
-		Authorized annotation = getAnnotation(Authorized.class);
+		final Authorized annotation = getAnnotation(Authorized.class);
+
 		if (annotation != null) {
-			User user = getUser();
+			final User user = getUser();
+
 			if (user != null && !user.isDefaultUser()) {
-				IContext ctx = new DxpResourceContext(super.getRequest(),
-						super.getUriInfo().getPathParameters(),
+				final IContext ctx = new DxpResourceContext(super.getRequest(), super.getUriInfo().getPathParameters(),
 						super.getResourceInfo());
-				IAuthorizer authorizer = super.getSgDxpApplication().getAuthorizer(ctx);
+				final IAuthorizer authorizer = super.getSgDxpApplication().getAuthorizer(ctx);
 				if (authorizer != null) {
 					result = authorizer.authorize(ctx);
 				}
@@ -75,8 +75,7 @@ public class AuthorizedFilter extends AbstractSecurityFilter {
 				result = false; // if not logged in fails too
 			}
 		}
+
 		return result;
 	}
-
-    private static Logger _logger = LoggerFactory.getLogger(AuthorizedFilter.class);
 }

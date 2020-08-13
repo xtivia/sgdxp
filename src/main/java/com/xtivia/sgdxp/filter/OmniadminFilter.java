@@ -15,71 +15,68 @@
  */
 package com.xtivia.sgdxp.filter;
 
+import javax.ws.rs.container.ContainerRequestContext;
+import javax.ws.rs.container.ResourceInfo;
+import javax.ws.rs.core.Response.Status;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.model.RoleConstants;
 import com.liferay.portal.kernel.model.User;
 import com.xtivia.sgdxp.annotation.Omniadmin;
 import com.xtivia.sgdxp.core.ISgDxpApplication;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.xtivia.sgdxp.exception.SgDxpRestException;
 
-import javax.ws.rs.WebApplicationException;
-import javax.ws.rs.container.ContainerRequestContext;
-import javax.ws.rs.container.ResourceInfo;
-import javax.ws.rs.core.Response.Status;
-
-@Omniadmin
 public class OmniadminFilter extends AbstractSecurityFilter {
+
+	private static Logger _logger = LoggerFactory.getLogger(OmniadminFilter.class);
 
 	public OmniadminFilter(ISgDxpApplication xsfApplication) {
 		super(xsfApplication);
 	}
-		
-    @Override
-    public void filter(ContainerRequestContext requestContext) {
 
-        if (_logger.isDebugEnabled()) {
-            ResourceInfo resourceInfo = super.getResourceInfo();
-        	_logger.debug(String.format("Omniadmin filter executes for class=%s, method=%s",
-                                        resourceInfo.getResourceClass().getName(),
-                                        resourceInfo.getResourceMethod().getName()));
+	@Override
+	public void filter(ContainerRequestContext requestContext) {
+		if (_logger.isDebugEnabled()) {
+			final ResourceInfo resourceInfo = super.getResourceInfo();
+			_logger.debug(String.format("Omniadmin filter executes for class=%s, method=%s",
+					resourceInfo.getResourceClass().getName(), resourceInfo.getResourceMethod().getName()));
 		}
 
 		if (!checkIsOmniadmin()) {
-		    throw new WebApplicationException(Status.UNAUTHORIZED);
+			throw new SgDxpRestException("User not omniadmin", Status.UNAUTHORIZED);
 		}
 
-        if (_logger.isDebugEnabled()) {
-            ResourceInfo resourceInfo = super.getResourceInfo();
-            _logger.debug(String.format("Omniadmin filter succeeds for class=%s, method=%s",
-                    resourceInfo.getResourceClass().getName(),
-                    resourceInfo.getResourceMethod().getName()));
-        }
-    }
-    
-    private boolean checkIsOmniadmin() {
-    	boolean result = true;
-    	Omniadmin annotation = getAnnotation(Omniadmin.class);
-    	if (annotation != null) {
-			User user = getUser();
-			if (user != null && !user.isDefaultUser()) {
-			    try {    
-		            result = 
-		            	getSgDxpApplication().getRoleLocalService().hasUserRole(user.getUserId(),
-                                                                              user.getCompanyId(),
-                                                                              RoleConstants.ADMINISTRATOR,
-                                                                              true);
-		        } catch (PortalException | SystemException e) {
-                    _logger.error("Error accessing DXP role service",e);
-                    result = false;
-		        }
-			} else {
-				result = false;   // if not logged in fails too
-			}
-    	}
-    	return result;
-    }
+		if (_logger.isDebugEnabled()) {
+			final ResourceInfo resourceInfo = super.getResourceInfo();
+			_logger.debug(String.format("Omniadmin filter succeeds for class=%s, method=%s",
+					resourceInfo.getResourceClass().getName(), resourceInfo.getResourceMethod().getName()));
+		}
+	}
 
-    private static Logger _logger = LoggerFactory.getLogger(OmniadminFilter.class);
+	private boolean checkIsOmniadmin() {
+		boolean result = true;
+		final Omniadmin annotation = getAnnotation(Omniadmin.class);
+
+		if (annotation != null) {
+			final User user = getUser();
+
+			if (user != null && !user.isDefaultUser()) {
+				try {
+					result = getSgDxpApplication().getRoleLocalService().hasUserRole(user.getUserId(),
+							user.getCompanyId(), RoleConstants.ADMINISTRATOR, true);
+				} catch (PortalException | SystemException e) {
+					_logger.error("Error accessing DXP role service", e);
+					result = false;
+				}
+			} else {
+				result = false; // if not logged in fails too
+			}
+		}
+
+		return result;
+	}
 }

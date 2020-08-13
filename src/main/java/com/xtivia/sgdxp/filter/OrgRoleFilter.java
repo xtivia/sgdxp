@@ -15,6 +15,16 @@
  */
 package com.xtivia.sgdxp.filter;
 
+import java.util.Arrays;
+import java.util.List;
+
+import javax.ws.rs.container.ContainerRequestContext;
+import javax.ws.rs.container.ResourceInfo;
+import javax.ws.rs.core.Response.Status;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.model.Organization;
@@ -23,69 +33,65 @@ import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.service.RoleLocalService;
 import com.xtivia.sgdxp.annotation.OrgRole;
 import com.xtivia.sgdxp.core.ISgDxpApplication;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.xtivia.sgdxp.exception.SgDxpRestException;
 
-import javax.ws.rs.WebApplicationException;
-import javax.ws.rs.container.ContainerRequestContext;
-import javax.ws.rs.container.ResourceInfo;
-import javax.ws.rs.core.Response.Status;
-import java.util.List;
-
-@OrgRole
 public class OrgRoleFilter extends AbstractSecurityFilter {
+
+	private static Logger _logger = LoggerFactory.getLogger(OrgRoleFilter.class);
 
 	public OrgRoleFilter(ISgDxpApplication xsfApplication) {
 		super(xsfApplication);
 	}
-		
-    @Override
-    public void filter(ContainerRequestContext requestContext) {
 
-        if (_logger.isDebugEnabled()) {
-            ResourceInfo resourceInfo = super.getResourceInfo();
-        	_logger.debug(String.format("Org role filter executes for class=%s, method=%s",
-                                        resourceInfo.getResourceClass().getName(),
-                                        resourceInfo.getResourceMethod().getName()));
+	@Override
+	public void filter(ContainerRequestContext requestContext) {
+		if (_logger.isDebugEnabled()) {
+			final ResourceInfo resourceInfo = super.getResourceInfo();
+			_logger.debug(String.format("Org role filter executes for class=%s, method=%s",
+					resourceInfo.getResourceClass().getName(), resourceInfo.getResourceMethod().getName()));
 		}
 
 		if (!checkUserInOrgRole()) {
-		    throw new WebApplicationException(Status.UNAUTHORIZED);
+			throw new SgDxpRestException("User not in organization role", Status.BAD_REQUEST);
 		}
 
-        if (_logger.isDebugEnabled()) {
-            ResourceInfo resourceInfo = super.getResourceInfo();
-            _logger.debug(String.format("Org role filter succeeds for class=%s, method=%s",
-                    resourceInfo.getResourceClass().getName(),
-                    resourceInfo.getResourceMethod().getName()));
-        }
-    }
-    
+		if (_logger.isDebugEnabled()) {
+			final ResourceInfo resourceInfo = super.getResourceInfo();
+			_logger.debug(String.format("Org role filter succeeds for class=%s, method=%s",
+					resourceInfo.getResourceClass().getName(), resourceInfo.getResourceMethod().getName()));
+		}
+	}
+
 	private boolean checkUserInOrgRole() {
 		boolean result = true;
-		OrgRole annotation = getAnnotation(OrgRole.class);
+		final OrgRole annotation = getAnnotation(OrgRole.class);
+
 		if (annotation != null) {
-			User user = getUser();
+			final User user = getUser();
+
 			if (user != null && !user.isDefaultUser()) {
 				Organization foundOrg = null;
+
 				try {
-					String orgname = annotation.org();
-					String rolename = annotation.role();
-					List<Organization> organizations = user.getOrganizations();
-					for (Organization organization : organizations){
-						if (organization.getName().equals(orgname)){
+					final String orgname = annotation.org();
+					final String[] rolenames = annotation.role();
+
+					final List<Organization> organizations = user.getOrganizations();
+					for (final Organization organization : organizations) {
+						if (organization.getName().equals(orgname)) {
 							foundOrg = organization;
 							break;
 						}
 					}
 
 					if (foundOrg != null) {
-						RoleLocalService roleLocalService = getSgDxpApplication().getRoleLocalService();
-						List<Role> roles = roleLocalService.getUserGroupRoles(user.getUserId(),
+						final RoleLocalService roleLocalService = getSgDxpApplication().getRoleLocalService();
+						final List<Role> roles = roleLocalService.getUserGroupRoles(user.getUserId(),
 								foundOrg.getGroupId());
 						result = false;
-						for (Role role: roles) {
-							if (role.getName().equals(rolename)) {
+
+						for (final Role role : roles) {
+							if (Arrays.stream(rolenames).anyMatch(role.getName()::equals)) {
 								result = true;
 							}
 						}
@@ -93,15 +99,14 @@ public class OrgRoleFilter extends AbstractSecurityFilter {
 						result = false;
 					}
 				} catch (PortalException | SystemException e) {
-					_logger.error("Error accessing DXP role service",e);
+					_logger.error("Error accessing DXP role service", e);
 					result = false;
 				}
 			} else {
 				result = false; // if not logged in fails too
 			}
 		}
+
 		return result;
 	}
-
-    private static Logger _logger = LoggerFactory.getLogger(OrgRoleFilter.class);
 }
