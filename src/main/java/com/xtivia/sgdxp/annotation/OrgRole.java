@@ -27,5 +27,5 @@ import javax.ws.rs.NameBinding;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface OrgRole {
    String org() default "";
-   String role() default "";
+   String[] role() default "";
 }

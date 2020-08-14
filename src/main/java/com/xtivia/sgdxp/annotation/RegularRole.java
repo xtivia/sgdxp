@@ -26,5 +26,5 @@ import javax.ws.rs.NameBinding;
 @Target({ElementType.METHOD,ElementType.TYPE})
 @Retention(RetentionPolicy.RUNTIME)
 public @interface RegularRole {
-   String value() default "";
+   String[] value() default "";
 }

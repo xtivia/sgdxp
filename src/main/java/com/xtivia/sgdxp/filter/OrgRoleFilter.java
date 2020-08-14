@@ -23,14 +23,17 @@ import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.service.RoleLocalService;
 import com.xtivia.sgdxp.annotation.OrgRole;
 import com.xtivia.sgdxp.core.ISgDxpApplication;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
+import java.util.Arrays;
+import java.util.List;
 
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.container.ContainerRequestContext;
 import javax.ws.rs.container.ResourceInfo;
 import javax.ws.rs.core.Response.Status;
-import java.util.List;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @OrgRole
 public class OrgRoleFilter extends AbstractSecurityFilter {
@@ -70,7 +73,7 @@ public class OrgRoleFilter extends AbstractSecurityFilter {
 				Organization foundOrg = null;
 				try {
 					String orgname = annotation.org();
-					String rolename = annotation.role();
+					String[] rolenames = annotation.role();
 					List<Organization> organizations = user.getOrganizations();
 					for (Organization organization : organizations){
 						if (organization.getName().equals(orgname)){
@@ -85,7 +88,7 @@ public class OrgRoleFilter extends AbstractSecurityFilter {
 								foundOrg.getGroupId());
 						result = false;
 						for (Role role: roles) {
-							if (role.getName().equals(rolename)) {
+							if (Arrays.stream(rolenames).anyMatch(role.getName()::equals)) {
 								result = true;
 							}
 						}
