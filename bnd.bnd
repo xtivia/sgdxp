@@ -9,4 +9,3 @@ Export-Package: \
 	com.xtivia.sgdxp.core,\
 	com.xtivia.sgdxp.exception,\
 	com.xtivia.sgdxp.filter
--sources: true
