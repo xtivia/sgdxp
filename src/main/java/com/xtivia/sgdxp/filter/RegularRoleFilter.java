@@ -62,15 +62,17 @@ public class RegularRoleFilter extends AbstractSecurityFilter {
 		boolean result = true;
 		RegularRole annotation = getAnnotation(RegularRole.class);
 		if (annotation != null) {
-			String role = annotation.value();
+			String[] roles = annotation.value();
 			User user = getUser();
 			if (user != null && !user.isDefaultUser()) {
 				try {
-					RoleLocalService roleLocalService = getSgDxpApplication().getRoleLocalService();
-					result = roleLocalService.hasUserRole(user.getUserId(),
-							user.getCompanyId(),
-							role,
-							true);
+					final RoleLocalService roleLocalService = getSgDxpApplication().getRoleLocalService();
+					result = false;
+					for (final String roleName : roles) {
+						if (roleLocalService.hasUserRole(user.getUserId(), user.getCompanyId(), roleName, true)) {
+							result = true;
+						}
+					}
 				} catch (PortalException | SystemException e) {
 					_logger.error("Error accessing DXP role service",e);
 					result = false;
