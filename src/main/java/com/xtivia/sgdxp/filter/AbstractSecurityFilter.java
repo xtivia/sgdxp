@@ -30,6 +30,7 @@ import org.slf4j.LoggerFactory;
 
 import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.service.UserLocalService;
+import com.liferay.portal.security.permission.PermissionCheckerUtil;
 import com.xtivia.sgdxp.core.SgDxpApplication;
 
 abstract class AbstractSecurityFilter implements ContainerRequestFilter {
@@ -75,6 +76,8 @@ abstract class AbstractSecurityFilter implements ContainerRequestFilter {
 		} catch (Exception e) {
 			_logger.error("Error accessing DXP user service",e);
 		}
+		// Set the user to the current thread for our permission checker
+		PermissionCheckerUtil.setThreadValues(user);
 		return user;
 	}
 
