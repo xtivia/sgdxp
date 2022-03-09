@@ -28,6 +28,7 @@ import com.xtivia.sgdxp.core.ISgDxpApplication;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.service.UserLocalService;
 import com.liferay.portal.security.permission.PermissionCheckerUtil;
@@ -65,10 +66,11 @@ abstract class AbstractSecurityFilter implements ContainerRequestFilter {
     User getUser() {
     	User user = null;
 		UserLocalService userLocalService = getSgDxpApplication().getUserLocalService();
-		String userid = httpRequest.getRemoteUser();
+		//String userid = httpRequest.getRemoteUser();
+		long userid = PortalUtil.getUserId(httpRequest);
 		try {
-			if (userid != null && userLocalService != null) {
-				user = userLocalService.getUser(new Long(userid));
+			if (userid != 0 && userLocalService != null) {
+				user = userLocalService.getUser(userid);
 				if (user.isDefaultUser()) {
 					user = null;
 				}
